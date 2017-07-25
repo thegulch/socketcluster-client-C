@@ -163,7 +163,11 @@ struct socket * Socket(char *protocol,char *address,int port,char *path,char *pr
     s->proxy_port=proxy_port;
 
     if(strcmp(protocol,"wss")==0  || strcmp(protocol,"https")==0){
-        use_ssl=LCCSCF_USE_SSL;
+        if((int) LWS_LIBRARY_VERSION[0] == 49){
+            use_ssl=LCCSCF_USE_SSL;
+        }else{
+            use_ssl=LCCSCF_USE_SSL | LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
+        }
     }
 
     s->connect=&socket_connect;
